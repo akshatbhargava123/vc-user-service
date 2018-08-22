@@ -1,0 +1,9 @@
+{
+  "name": "Vicinity Charter Backend",
+  "version": "1.0.0",
+  "description": "VC REST APIs",
+  "title": "Vicinity Charter Backend",
+  "order": [
+    "User"
+  ]
+}
