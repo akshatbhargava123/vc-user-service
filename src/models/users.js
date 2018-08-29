@@ -8,7 +8,8 @@ const User = new Schema({
   },
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   email: {
     type: String,
@@ -18,6 +19,14 @@ const User = new Schema({
   password: {
     type: String,
     required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  website: {
+    type: String,
+    required: false
   },
   role: {
     type: String,
@@ -34,6 +43,18 @@ const User = new Schema({
       "administrator"
     ],
     required: true
+  },
+  posts: {
+    type: Number,
+    required: false
+  },
+  otp: {
+    type: String,
+    required: false
+  },
+  lastOtpRequested: {
+    type: Date,
+    required: false
   }
 });
 
