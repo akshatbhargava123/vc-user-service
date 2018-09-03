@@ -83,5 +83,9 @@ export default ({ config, db }) => {
 
   api.get('/list', (req, res) => users({ req, res, config, db }).list());
 
+  api.delete('/:id', (req, res) => users({ req, res, config, db }).delete());
+
+  api.post('/resetPassword', (req, res) => users({ req, res, config, db }).resetPasswordRequest());
+
   return api;
 }

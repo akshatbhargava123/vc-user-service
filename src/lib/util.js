@@ -1,4 +1,14 @@
 
+import nodemailer from 'nodemailer';
+
+const mailTransporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'akshat.vc@gmail.com',
+    pass: 'StrongestPasswordEver'
+  }
+});
+
 /**	Creates a callback that proxies node callback style arguments to an Express Response object.
  *	@param {express.Response} res	Express HTTP Response
  *	@param {number} [status=200]	Status code to send on success
@@ -39,10 +49,25 @@ export function mongooseErrorHandler(err) {
 
 export function generateRandomString(length = 6) {
   let text = "";
-  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@%^*()_+-";
 
   for (let i = 0; i < length; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text.toUpperCase();
+}
+
+export function sendResetPasswordMail(to, code, callback) {
+  mailTransporter.sendMail({
+    from: 'akshat.vc@gmail.com',
+    to,
+    subject: 'Password reset email for your vicinity charter account',
+    html: `
+      Hello,
+      Go to the link below to reset your password <br/>
+      <a href="http://localhost:4200/reset_password?code=${code}&email=${to}" target="_blank">
+        Click Here
+      </a>
+    `
+  }, callback);
 }

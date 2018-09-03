@@ -6,7 +6,8 @@
 	"public_routes": [
 		"register",
 		"login",
-		"docs"
+    "docs",
+    "resetPassword"
 	],
 	"user_roles": [
 		"Vendor",

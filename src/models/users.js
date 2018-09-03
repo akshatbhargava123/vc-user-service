@@ -55,6 +55,14 @@ const User = new Schema({
   lastOtpRequested: {
     type: Date,
     required: false
+  },
+  passwordResetCode: {
+    type: String,
+    required: false
+  },
+  passwordResetCodeRequested: {
+    type: Date,
+    required: false
   }
 });
 

@@ -1,7 +1,7 @@
 import UserModel from '../../models/users';
 import { hashSync, compareSync } from 'bcryptjs';
 import { sign as jwtSign } from 'jsonwebtoken';
-import { toRes, mongooseErrorHandler, generateRandomString } from './../../lib/util';
+import { toRes, mongooseErrorHandler, generateRandomString, sendResetPasswordMail } from './../../lib/util';
 
 import twilio from 'twilio';
 import { TWILIO_CONFIG } from '../../twilioConfig';
@@ -109,6 +109,36 @@ export default ({ req, res, config, db }) => ({
 			});
 			toRes(res)(null, { users });
 		})
-	}
+  },
+  
+  delete() {
+    UserModel(db).deleteOne({ _id: req.params.id }, (err,) => {
+      if (err) return toRes(res)(mongooseErrorHandler(err));
+      toRes(res)(null, { message: 'User successfully deleted' });
+    });
+  },
+  
+  resetPasswordRequest() {
+    const email = req.body.email;
+    if (!email) return toRes(res)({ message: 'No email specified.' });
+    UserModel(db).findOne({ email }, (err, result) => {
+      if (err) return toRes(res)(mongooseErrorHandler);
+      if (!result) return toRes(res, 404)({ message: 'No user registered with the requested email' });
+
+      // user found, now generate a random token and send email to the user
+      const user = result;
+      const code = generateRandomString(12);
+      sendResetPasswordMail(req.body.email, code, (err, info) => {
+        if (err) return toRes(res)({ message: err });
+
+        user.passwordResetCode = code;
+        user.passwordResetCodeRequested = new Date().toString();
+				user.save((err, results) => {
+					if (err) toRes(res)({ message: 'Error in sending OTP' });
+					toRes(res)(null, { message: 'Password reset email sent' });
+				});
+      });
+    });
+  }
 
 });
